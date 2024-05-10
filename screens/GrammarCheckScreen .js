@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, StyleSheet } from 'react-native';
+import Footer from '../components/Footer';
 
 const GrammarCheckScreen = () => {
   const [inputText, setInputText] = useState('');
@@ -29,6 +30,7 @@ const GrammarCheckScreen = () => {
           <Text style={styles.outputText}>{outputText}</Text>
         </View>
       </KeyboardAvoidingView>
+      <Footer />
     </View>
   );
 };
@@ -38,8 +40,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingTop: 70
   },
   content: {
+    flex: 1,
     width: '80%',
     alignItems: 'center',
   },
