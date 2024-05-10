@@ -1,20 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { StyleSheet, ScrollView, TextInput, View, TouchableOpacity, Text } from 'react-native';
 
 const Content = () => {
   const [text, setText] = useState('');
 
+  const scrollViewRef = useRef();
+
+  const handleTextChange = (text) => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollToEnd({ animated: true });
+    }
+    setText(text);
+  };
+
   return (
     <View style={styles.content}>
         <View style={[styles.textInputContainer, styles.border]}>
-            <ScrollView contentContainerStyle={styles.scrollView}>
+            <ScrollView contentContainerStyle={styles.scrollView} ref={scrollViewRef}>
             <TextInput
                 style={styles.textInput}
                 multiline
                 placeholder='Write something!'
-                onChangeText={setText}
+                onChangeText={handleTextChange}
                 value={text}
-                maxLength={500}
+                maxLength={200}
+                onBlur={handleClose}
             />
             </ScrollView>
         </View>
@@ -43,7 +53,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   textInputContainer: {
-    height: 400,
+    height: 200,
     borderWidth: 1,
     borderColor: '#CCCCCC',
     marginBottom: 10,

@@ -1,23 +1,19 @@
 import React from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { View, StyleSheet } from 'react-native';
-import Header from './components/Header';
-import Content from './components/Content';
-import Footer from './components/Footer';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import MainScreen from './screens/MainScreen';
+import GrammarCheckScreen from './screens/GrammarCheckScreen ';
+
+
+const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <View style={styles.appContainer}>
-      <Header />
-      <Content />
-      <Footer />
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen name="Home" component={MainScreen} />
+        <Stack.Screen name="GrammarCheck" component={GrammarCheckScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-}
-
-const styles = StyleSheet.create({
-  appContainer: {
-    flex: 1,
-  },
-});
+};

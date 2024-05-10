@@ -5,7 +5,7 @@ const Footer = () => {
   return (
     <View style={[styles.footer, styles.border]}>
       <TouchableOpacity style={[styles.footerItem, styles.borderRight]}>
-        <Text style={styles.footerText}>Home page</Text>
+        <Text style={styles.footerText}>Home</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.footerItem}>
         <Text style={styles.footerText}>Account</Text>
