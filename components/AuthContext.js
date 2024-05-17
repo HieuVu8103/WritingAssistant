@@ -6,7 +6,6 @@ export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const login = () => {
-    // Login logic
     setIsLoggedIn(true);
   };
 

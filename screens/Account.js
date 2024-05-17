@@ -1,5 +1,7 @@
-import React from 'react';
-import { View, Text, StyleSheet, FlatList, Image } from 'react-native';
+import React, { useContext } from 'react';
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native';
+import { AuthContext } from '../components/AuthContext';
+import { Ionicons } from '@expo/vector-icons';
 
 const Account = () => {
   const userData = {
@@ -13,6 +15,8 @@ const Account = () => {
     { id: 2, input: 'Another example input.', output: 'Another example output.' },
   ];
 
+  const { logout } = useContext(AuthContext);
+
   return (
     <View style={styles.container}>
       <View style={styles.userInfo}>
@@ -21,6 +25,9 @@ const Account = () => {
           <Text style={styles.name}>{userData.name}</Text>
           <Text style={styles.email}>{userData.email}</Text>
         </View>
+        <TouchableOpacity style={styles.logoutButton} onPress={logout}>
+          <Ionicons name="log-out-outline" size={24} color="white" />
+        </TouchableOpacity>
       </View>
 
       <View style={styles.dashboardContainer}>
@@ -87,6 +94,18 @@ const styles = StyleSheet.create({
   output: {
     fontSize: 16,
     color: '#666',
+  },
+  logoutButton: {
+    backgroundColor: 'red',
+    padding: 5,
+    borderRadius: 5,
+    marginLeft: 89,
+    marginBottom: 18
+  },
+  logoutButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
 
