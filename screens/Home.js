@@ -2,7 +2,8 @@ import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-const MainScreen = () => {
+function Home() {
+
   const navigation = useNavigation();
 
   const handlePress = (screenName) => {
@@ -32,6 +33,8 @@ const MainScreen = () => {
     </View>
   );
 };
+
+export default Home;
 
 const styles = StyleSheet.create({
   container: {
@@ -64,5 +67,3 @@ const styles = StyleSheet.create({
     color: "#FFFFFF"
   },
 });
-
-export default MainScreen;

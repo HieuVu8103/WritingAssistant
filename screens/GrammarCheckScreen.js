@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, StyleSheet } from 'react-native';
-import Footer from '../components/Footer';
 
 const GrammarCheckScreen = () => {
   const [inputText, setInputText] = useState('');
@@ -30,7 +29,6 @@ const GrammarCheckScreen = () => {
           <Text style={styles.outputText}>{outputText}</Text>
         </View>
       </KeyboardAvoidingView>
-      <Footer />
     </View>
   );
 };
