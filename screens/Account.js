@@ -1,21 +1,31 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native';
 import { AuthContext } from '../components/AuthContext';
 import { Ionicons } from '@expo/vector-icons';
 
 const Account = () => {
+  const [activityHistory, setActivityHistory] = useState([
+    { id: 1, input: 'This is a sample input text.', output: 'This is the corresponding output.' },
+    { id: 2, input: 'Another example input.', output: 'Another example output.' },
+  ]);
+
   const userData = {
     name: 'Hiếu Vũ',
     email: 'hieu.vu@example.com',
-    photo: 'https://scontent.fhan5-9.fna.fbcdn.net/v/t39.30808-1/431246820_1453386681926182_5806316568775742809_n.jpg?stp=dst-jpg_p200x200&_nc_cat=109&ccb=1-7&_nc_sid=5f2048&_nc_ohc=BIIx5zsA-LAQ7kNvgHnrUC2&_nc_ht=scontent.fhan5-9.fna&oh=00_AYCK6eu2YprPOyBzm44au7HkuSlDSUPIfsu5Tsrp2DA5hA&oe=664CFC4A',
+    photo: 'https://scontent.fhan5-9.fna.fbcdn.net/v/t39.30808-1/431246820_1453386681926182_5806316568775742809_n.jpg?stp=dst-jpg_p200x200&_nc_cat=109&ccb=1-7&_nc_sid=5f2048&_nc_ohc=1gePTyOGMEgQ7kNvgGpiC_3&_nc_ht=scontent.fhan5-9.fna&oh=00_AYA1Va_KpVMV0K-9Lk7rKwzQK4_j0vLJbpPt8hVtsexzbw&oe=665FE1CA',
   };
 
-  const activityHistory = [
-    { id: 1, input: 'This is a sample input text.', output: 'This is the corresponding output.' },
-    { id: 2, input: 'Another example input.', output: 'Another example output.' },
-  ];
-
   const { logout } = useContext(AuthContext);
+
+  // Hàm để thêm một mục mới vào lịch sử hoạt động
+  const addToActivityHistory = (input, output) => {
+    const newActivity = {
+      id: Math.random().toString(), // Tạo một id ngẫu nhiên
+      input: input,
+      output: output,
+    };
+    setActivityHistory(prevActivity => [newActivity, ...prevActivity]);
+  };
 
   return (
     <View style={styles.container}>
@@ -34,7 +44,7 @@ const Account = () => {
         <Text style={styles.dashboardTitle}>Activity Dashboard</Text>
         <FlatList
           data={activityHistory}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <View style={styles.activityItem}>
               <Text style={styles.input}>Input: {item.input}</Text>

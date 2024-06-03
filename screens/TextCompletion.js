@@ -1,14 +1,52 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, StyleSheet, Keyboard, Clipboard, ScrollView, ActivityIndicator } from 'react-native';
+import Together from 'together-ai';
+
+const together = new Together({
+  apiKey: '641a769976dea73fe13ea16626c136498408407c837df7b32ac4ca8b3bbd9014',
+});
+
+const openAIService = async (inputText) => {
+  try {
+    const response = await together.chat.completions.create({
+      messages: [
+        { role: 'system', content: 'Pick up where the user left off and complete the input text with generated sentences.(Remember to write the user text as well)' },
+        { role: 'user', content: inputText },
+      ],
+      model: 'meta-llama/Llama-3-8b-chat-hf',
+    });
+    return response.choices[0].message.content;
+  } catch (error) {
+    console.error('Error in openAIService:', error);
+    return 'Error occurred while processing your request.';
+  }
+};
 
 const TextCompletion = () => {
   const [inputText, setInputText] = useState('');
   const [outputText, setOutputText] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleConfirm = () => {
-    // Xử lý logic khi người dùng xác nhận
-    // Ở đây tạm thời gán outputText bằng inputText
-    setOutputText(inputText);
+  const handleConfirm = async () => {
+    setIsLoading(true); 
+    Keyboard.dismiss();
+    try {
+      const response = await openAIService(inputText);
+      let modifiedOutputText = response;
+      if (modifiedOutputText.startsWith("Here is the completed text:")) {
+        modifiedOutputText = modifiedOutputText.replace("Here is the completed text:", "").trim();
+      }
+      setOutputText(modifiedOutputText);
+    } catch (error) {
+      console.error('Error in handleConfirm:', error);
+      setOutputText('Error occurred while processing your request.');
+    } finally {
+      setIsLoading(false); 
+    }
+  };
+
+  const copyToClipboard = () => {
+    Clipboard.setString(outputText);
   };
 
   return (
@@ -26,8 +64,17 @@ const TextCompletion = () => {
         </TouchableOpacity>
         <Text style={styles.outputLabel}>Output Text</Text>
         <View style={styles.outputContainer}>
-          <Text style={styles.outputText}>{outputText}</Text>
+          {isLoading ? ( 
+            <ActivityIndicator size="large" color="#2CB673" />
+          ) : (
+            <ScrollView>
+              <Text style={styles.outputText}>{outputText}</Text>
+            </ScrollView>
+          )}
         </View>
+        <TouchableOpacity style={styles.copyButton} onPress={copyToClipboard}>
+          <Text style={styles.copyButtonText}>Copy</Text>
+        </TouchableOpacity>
       </KeyboardAvoidingView>
     </View>
   );
@@ -47,7 +94,7 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '100%',
-    height: 250,
+    height: 200,
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,
@@ -57,10 +104,11 @@ const styles = StyleSheet.create({
   },
   confirmButton: {
     backgroundColor: '#2CB673',
-    paddingVertical: 15,
+    paddingVertical: 10,
     paddingHorizontal: 30,
     borderRadius: 8,
-    marginBottom: 20,
+    marginBottom: 10,
+    marginTop: -10,
   },
   confirmButtonText: {
     color: '#fff',
@@ -73,7 +121,9 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 8,
     padding: 10,
-    alignItems: 'center'
+    marginBottom: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   outputLabel: {
     fontWeight: 'bold',
@@ -81,6 +131,17 @@ const styles = StyleSheet.create({
   },
   outputText: {
 
+  },
+  copyButton: {
+    backgroundColor: '#2CB673',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    marginTop: 10
+  },
+  copyButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });
 
