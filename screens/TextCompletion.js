@@ -10,7 +10,7 @@ const openAIService = async (inputText) => {
   try {
     const response = await together.chat.completions.create({
       messages: [
-        { role: 'system', content: 'Pick up where the user left off and complete the input text with generated sentences.(Remember to write the user text as well)' },
+        { role: 'system', content: 'Pick up where the user left off and complete the input text with generated sentences.Remember to write the user text as well.(do not include any introductory or explanatory phrases.)' },
         { role: 'user', content: inputText },
       ],
       model: 'meta-llama/Llama-3-8b-chat-hf',
@@ -45,6 +45,15 @@ const TextCompletion = () => {
     }
   };
 
+  const wordCount = (text) => {
+    if (text.trim() === "") {
+      return 0;
+    }
+    const words = text.trim().split(/\s+/);
+    return words.length;
+  };
+  
+
   const copyToClipboard = () => {
     Clipboard.setString(outputText);
   };
@@ -59,6 +68,7 @@ const TextCompletion = () => {
           value={inputText}
           multiline
         />
+        <Text style={styles.wordCount}>Word count: {wordCount(inputText)}</Text>
         <TouchableOpacity style={styles.confirmButton} onPress={handleConfirm}>
           <Text style={styles.confirmButtonText}>Confirm</Text>
         </TouchableOpacity>
@@ -72,6 +82,7 @@ const TextCompletion = () => {
             </ScrollView>
           )}
         </View>
+        <Text style={styles.wordCount}>Word count: {wordCount(outputText)}</Text>
         <TouchableOpacity style={styles.copyButton} onPress={copyToClipboard}>
           <Text style={styles.copyButtonText}>Copy</Text>
         </TouchableOpacity>
@@ -98,17 +109,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,
-    paddingTop: 10,
-    padding: 10,
-    marginBottom: 20,
+    padding: 10
   },
   confirmButton: {
     backgroundColor: '#2CB673',
     paddingVertical: 10,
     paddingHorizontal: 30,
     borderRadius: 8,
-    marginBottom: 10,
-    marginTop: -10,
+    marginBottom: 10
   },
   confirmButtonText: {
     color: '#fff',
@@ -120,24 +128,20 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,
-    padding: 10,
-    marginBottom: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
+    padding: 10
   },
   outputLabel: {
     fontWeight: 'bold',
     marginBottom: 5,
   },
-  outputText: {
-
+  wordCount: {
+    padding: 10,
   },
   copyButton: {
     backgroundColor: '#2CB673',
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 8,
-    marginTop: 10
+    borderRadius: 8
   },
   copyButtonText: {
     color: '#fff',
