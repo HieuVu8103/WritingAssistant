@@ -11,6 +11,7 @@ import {
   Platform,
   ScrollView,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { initializeApp } from "@firebase/app";
 import {
@@ -42,8 +43,9 @@ const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [isLogin, setIsLogin] = useState(true); // Track whether it's login or register
+  const [isLogin, setIsLogin] = useState(true); 
   const [realName, setRealName] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const db = getFirestore();
   useEffect(() => {
@@ -58,6 +60,7 @@ const LoginScreen = ({ navigation }) => {
   }, [auth]);
 
   const handleAuthentication = async () => {
+    setLoading(true); 
     try {
       if (isLogin) {
         await signInWithEmailAndPassword(auth, email, password);
@@ -74,12 +77,6 @@ const LoginScreen = ({ navigation }) => {
           email,
           name: realName,
         });
-        // console.log("User created successfully!");
-        // setIsLogin(true);
-        // setEmail("");
-        // setPassword("");
-        // setConfirmPassword("");
-        // setRealName("");
       }
     } catch (error) {
       if (error.code === "auth/email-already-in-use") {
@@ -94,6 +91,8 @@ const LoginScreen = ({ navigation }) => {
         console.error(error.code);
         Alert.alert("An error occurred. Please try again later.");
       }
+    } finally {
+      setLoading(false); 
     }
   };
 
@@ -143,10 +142,15 @@ const LoginScreen = ({ navigation }) => {
           <TouchableOpacity
             style={styles.button}
             onPress={handleAuthentication}
+            disabled={loading} 
           >
-            <Text style={styles.buttonText}>
-              {isLogin ? "Login" : "Register and Login"}
-            </Text>
+            {loading ? (
+              <ActivityIndicator size="small" color="#fff" />
+            ) : (
+              <Text style={styles.buttonText}>
+                {isLogin ? "Login" : "Register and Login"}
+              </Text>
+            )}
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => setIsLogin(!isLogin)}>

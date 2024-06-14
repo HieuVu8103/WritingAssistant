@@ -41,7 +41,7 @@ const Account = ({ navigation }) => {
             const userActivities = [];
             docsRef.forEach((doc) => {
               if (doc.data().id === uid) {
-                console.log(doc.id, " => ", doc.data());
+                // console.log(doc.id, " => ", doc.data());
                 userActivities.push({
                   id: doc.id,
                   input: doc.data().input,
